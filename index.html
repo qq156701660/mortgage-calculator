@@ -428,7 +428,13 @@
     <script>
         // 格式化数字显示
         function formatNumber(num) {
-            return new Intl.NumberFormat('zh-CN').format(num.toFixed(2));
+            // 添加调试日志
+            console.log('formatNumber 输入:', num, '类型:', typeof num);
+            const fixed = num.toFixed(2);
+            console.log('toFixed(2) 结果:', fixed);
+            const result = new Intl.NumberFormat('zh-CN').format(fixed);
+            console.log('最终结果:', result);
+            return result;
         }
         
         // 更新滑块显示值
@@ -546,12 +552,16 @@
             const annualRate = parseFloat(document.getElementById('interestRate').value);
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             
+            console.log('计算参数:', { principal, years, annualRate, paymentMethod });
+            
             let result;
             if (paymentMethod === 'equal') {
                 result = calculateEqualPayment(principal, annualRate, years);
             } else {
                 result = calculateEqualPrincipal(principal, annualRate, years);
             }
+            
+            console.log('计算结果:', result);
             
             // 更新显示结果
             document.getElementById('monthlyPayment').textContent = formatNumber(result.monthlyPayment);
