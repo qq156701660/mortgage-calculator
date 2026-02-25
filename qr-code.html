@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>房贷计算器 - 微信分享二维码</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .qr-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #e9ecef;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .qr-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #4f46e5;
+        }
+        
+        .url-box {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        
+        .instructions {
+            text-align: left;
+            background: #f0f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .instructions h3 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+        }
+        
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .status {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        
+        .status i {
+            color: #10b981;
+            margin-right: 8px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .feature {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature i {
+            color: #4f46e5;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .feature h4 {
+            margin: 0 0 5px 0;
+            color: #374151;
+        }
+        
+        .feature p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-qrcode"></i> 房贷计算器分享</h1>
+        <p class="subtitle">扫描二维码或在微信中打开链接即可使用</p>
+        
+        <div class="status">
+            <i class="fas fa-check-circle"></i> GitHub Pages 部署已配置，正在构建中...
+        </div>
+        
+        <div class="qr-container">
+            <div class="qr-placeholder">
+                <i class="fas fa-qrcode"></i>
+                <div>请使用微信扫描</div>
+                <div>或长按识别二维码</div>
+            </div>
+        </div>
+        
+        <div class="url-box">
+            https://qq156701660.github.io/mortgage-calculator/
+        </div>
+        
+        <div class="instructions">
+            <h3><i class="fas fa-share-alt"></i> 微信分享指南</h3>
+            <ol>
+                <li><strong>复制链接</strong>：点击上方"复制链接"按钮</li>
+                <li><strong>微信分享</strong>：将链接发送给朋友或微信群</li>
+                <li><strong>点击访问</strong>：在微信中点击链接即可打开计算器</li>
+                <li><strong>收藏备用</strong>：建议在微信中收藏，方便随时使用</li>
+            </ol>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-calculator"></i>
+                <h4>精准计算</h4>
+                <p>支持等额本息/等额本金</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-mobile-alt"></i>
+                <h4>移动优化</h4>
+                <p>完美适配手机屏幕</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-save"></i>
+                <h4>本地存储</h4>
+                <p>自动保存计算记录</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-share"></i>
+                <h4>一键分享</h4>
+                <p>方便分享给朋友</p>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <a href="https://qq156701660.github.io/mortgage-calculator/" class="btn" target="_blank">
+                <i class="fas fa-external-link-alt"></i> 立即访问
+            </a>
+            <button class="btn btn-secondary" onclick="copyUrl()">
+                <i class="fas fa-copy"></i> 复制链接
+            </button>
+            <a href="https://github.com/qq156701660/mortgage-calculator" class="btn" target="_blank">
+                <i class="fab fa-github"></i> 查看源码
+            </a>
+        </div>
+        
+        <p style="margin-top: 25px; color: #6b7280; font-size: 0.9rem;">
+            <i class="fas fa-info-circle"></i> 如果页面无法立即访问，请等待1-2分钟让 GitHub Pages 完成部署
+        </p>
+    </div>
+
+    <script>
+        function copyUrl() {
+            const url = 'https://qq156701660.github.io/mortgage-calculator/';
+            navigator.clipboard.writeText(url).then(() => {
+                alert('链接已复制到剪贴板！\n\n' + url);
+            }).catch(err => {
+                // 备用方法
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('链接已复制到剪贴板！');
+            });
+        }
+        
+        // 检查部署状态
+        async function checkDeploymentStatus() {
+            try {
+                const response = await fetch('https://api.github.com/repos/qq156701660/mortgage-calculator/pages');
+                const data = await response.json();
+                
+                const statusElement = document.querySelector('.status');
+                if (data.status === 'built') {
+                    statusElement.innerHTML = '<i class="fas fa-check-circle"></i> 部署完成！页面已可正常访问';
+                    statusElement.style.background = '#d1fae5';
+                    statusElement.style.color = '#065f46';
+                } else if (data.status === 'building') {
+                    statusElement.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> 正在构建中，请稍候...';
+                } else if (data.status === 'errored') {
+                    statusElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 构建失败，请检查部署配置';
+                    statusElement.style.background = '#fee2e2';
+                    statusElement.style.color = '#991b1b';
+                }
+            } catch (error) {
+                console.log('状态检查失败:', error);
+            }
+        }
+        
+        // 每30秒检查一次状态
+        setInterval(checkDeploymentStatus, 30000);
+        
+        // 页面加载时检查一次
+        document.addEventListener('DOMContentLoaded', checkDeploymentStatus);
+        
+        // 添加键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'c') {
+                copyUrl();
+                e.preventDefault();
+            }
+            if (e.key === 'F5') {
+                window.location.href = 'https://qq156701660.github.io/mortgage-calculator/';
+            }
+        });
+        
+        console.log('二维码页面已加载，GitHub Pages URL: https://qq156701660.github.io/mortgage-calculator/');
+    </script>
+</body>
+</html>
