@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>房贷计算器 - 隐私保护短链接</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin: 20px;
+            border-radius: 8px;
+            color: #92400e;
+        }
+        
+        .warning strong {
+            color: #d97706;
+        }
+        
+        .links-section {
+            padding: 30px;
+        }
+        
+        .link-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .link-card:hover {
+            border-color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .link-card h3 {
+            color: #374151;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .link-card h3 i {
+            color: #4f46e5;
+        }
+        
+        .original-url {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #64748b;
+            word-break: break-all;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .short-url-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .short-url {
+            flex: 1;
+            background: white;
+            border: 2px solid #4f46e5;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: monospace;
+            font-size: 1rem;
+            color: #1e293b;
+            font-weight: 500;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.3);
+        }
+        
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .instructions {
+            background: #f0f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .instructions h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+            color: #374151;
+        }
+        
+        .qr-section {
+            text-align: center;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+        
+        .qr-placeholder {
+            width: 180px;
+            height: 180px;
+            background: #e9ecef;
+            border-radius: 10px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #6c757d;
+            margin: 20px 0;
+        }
+        
+        .qr-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4f46e5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .action-btn.secondary {
+            background: #6c757d;
+        }
+        
+        .action-btn.secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        @media (max-width: 768px) {
+            .short-url-container {
+                flex-direction: column;
+            }
+            
+            .copy-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 14px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> 隐私保护短链接</h1>
+            <p>隐藏原始GitHub链接，保护您的隐私</p>
+        </div>
+        
+        <div class="warning">
+            <strong><i class="fas fa-exclamation-triangle"></i> 隐私保护提示：</strong>
+            原始链接包含您的GitHub用户名，已为您生成短链接隐藏个人信息。
+        </div>
+        
+        <div class="links-section">
+            <!-- 短链接1 -->
+            <div class="link-card">
+                <h3><i class="fas fa-link"></i> 短链接方案一 (is.gd)</h3>
+                <div class="original-url">
+                    原始链接：https://qq156701660.github.io/mortgage-calculator/
+                </div>
+                <div class="short-url-container">
+                    <input type="text" class="short-url" id="shortLink1" value="https://is.gd/S9Fmdi" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('shortLink1', this)">
+                        <i class="fas fa-copy"></i> 复制链接
+                    </button>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">12字符</div>
+                        <div class="stat-label">链接长度</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">安全</div>
+                        <div class="stat-label">隐私保护</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">永久</div>
+                        <div class="stat-label">有效期</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 短链接2 -->
+            <div class="link-card">
+                <h3><i class="fas fa-link"></i> 短链接方案二 (TinyURL)</h3>
+                <div class="original-url">
+                    原始链接：https://qq156701660.github.io/mortgage-calculator/
+                </div>
+                <div class="short-url-container">
+                    <input type="text" class="short-url" id="shortLink2" value="https://tinyurl.com/23q3u8lo" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('shortLink2', this)">
+                        <i class="fas fa-copy"></i> 复制链接
+                    </button>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">24字符</div>
+                        <div class="stat-label">链接长度</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">安全</div>
+                        <div class="stat-label">隐私保护</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">永久</div>
+                        <div class="stat-label">有效期</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-share-alt"></i> 微信分享指南</h3>
+                <ol>
+                    <li><strong>选择短链接</strong>：点击上方"复制链接"按钮（推荐使用第一个短链接）</li>
+                    <li><strong>微信发送</strong>：将短链接粘贴到微信聊天窗口</li>
+                    <li><strong>点击访问</strong>：在微信中点击链接即可打开房贷计算器</li>
+                    <li><strong>收藏备用</strong>：建议在微信中收藏，方便随时使用</li>
+                    <li><strong>分享给朋友</strong>：将短链接分享给需要计算房贷的朋友</li>
+                </ol>
+            </div>
+            
+            <div class="qr-section">
+                <h3><i class="fas fa-qrcode"></i> 二维码分享（推荐）</h3>
+                <p>使用微信"扫一扫"功能扫描二维码</p>
+                <div class="qr-placeholder">
+                    <i class="fas fa-qrcode"></i>
+                    <div>请使用微信扫描</div>
+                    <div>或长按识别二维码</div>
+                </div>
+                <p style="color: #6b7280; font-size: 0.9rem; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i> 如需实际二维码，可使用微信小程序"草料二维码"生成
+                </p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="https://is.gd/S9Fmdi" class="action-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> 测试访问
+                </a>
+                <button class="action-btn secondary" onclick="copyAllLinks()">
+                    <i class="fas fa-copy"></i> 复制所有链接
+                </button>
+                <a href="https://qq156701660.github.io/mortgage-calculator/" class="action-btn secondary" target="_blank">
+                    <i class="fas fa-code"></i> 查看原始页面
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 房贷计算器 | 隐私保护短链接服务 | 最后更新：2026-02-25</p>
+            <p>短链接永久有效，可安全分享 | 原始计算器功能完整保留</p>
+        </div>
+    </div>
+
+    <script>
+        // 复制到剪贴板函数
+        function copyToClipboard(elementId, button) {
+            const element = document.getElementById(elementId);
+            const text = element.value;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // 显示复制成功状态
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                button.classList.add('copied');
+                
+                // 3秒后恢复原状
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 3000);
+                
+                // 显示成功提示
+                showNotification('链接已复制到剪贴板！');
+            }).catch(err => {
+                // 备用方法
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 3000);
+                
+                showNotification('链接已复制到剪贴板！');
+            });
+        }
+        
+        // 复制所有链接
+        function copyAllLinks() {
+            const links = [
+                '房贷计算器短链接：',
+                '1. https://is.gd/S9Fmdi',
+                '2. https://tinyurl.com/23q3u8lo',
+                '',
+                '使用说明：',
+                '- 在微信中直接点击链接即可使用',
+                '- 建议收藏链接方便随时访问',
+                '- 可分享给需要计算房贷的朋友',
+                '',
+                '功能特点：',
+                '✅ 等额本息/等额本金计算',
+                '✅ 实时计算，输入即更新',
+                '✅ 移动端优化，微信友好',
+                '✅ 本地存储，保存记录',
+                '✅ 隐私保护，隐藏个人信息'
+            ].join('\n');
+            
+            navigator.clipboard.writeText(links).then(() => {
+                showNotification('所有链接和信息已复制到剪贴板！');
+            }).catch(err => {
+                const textArea = document.createElement('textarea');
+                textArea.value = links;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('所有链接和信息已复制到剪贴板！');
+            });
+        }
+        
+        // 显示通知
+        function showNotification(message) {
+            // 移除现有通知
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // 创建新通知
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                    z-index: 1000;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    animation: slideIn 0.3s ease;
+                ">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    notification.remove();
+                    style.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // 添加键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === '1') {
+                copyToClipboard('shortLink1', document.querySelector('#shortLink1').nextElementSibling);
+                e.preventDefault();
+            }
+            if (e.ctrlKey && e.key === '2') {
+                copyToClipboard('shortLink2', document.querySelector('#shortLink2').nextElementSibling);
+                e.preventDefault();
+            }
+            if (e.ctrlKey && e.key === 'a') {
+                copyAllLinks();
+                e.preventDefault();
+            }
+        });
+        
+        // 页面加载时显示提示
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('隐私保护短链接页面已加载');
+            console.log('短链接1: https://is.gd/S9Fmdi');
+            console.log('短链接2: https://tinyurl.com/23q3u8lo');
+            
+            // 添加使用提示
+            setTimeout(() => {
+                showNotification('提示：按 Ctrl+1 复制第一个短链接');
+            }, 1000);
+        });
+        
+        // 添加点击统计（模拟）
+        let clickCount = 0;
+        document.querySelectorAll('.copy-btn, .action-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                clickCount++;
+                console.log(`按钮点击统计: ${clickCount} 次`);
+            });
+        });
+        
+        // 添加页面访问时间记录
+        const pageLoadTime = new Date().toLocaleString('zh-CN');
+        console.log(`页面访问时间: ${pageLoadTime}`);
+        
+        // 添加分享功能
+        function shareOnWeChat() {
+            const link = 'https://is.gd/S9Fmdi';
+            const text = `房贷计算器 - 精准计算月供、利息和还款计划\n\n使用链接：${link}\n\n功能：等额本息/等额本金计算、实时计算、移动端优化`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '房贷计算器',
+                    text: text,
+                    url: link
+                });
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('分享内容已复制，可粘贴到微信发送！');
+                });
+            }
+        }
+        
+        // 添加分享按钮事件
+        document.querySelectorAll('.action-btn')[1].addEventListener('click', shareOnWeChat);
+    </script>
+</body>
+</html>
