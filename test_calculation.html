@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>房贷计算器测试</title>
+</head>
+<body>
+    <h1>房贷计算器计算验证</h1>
+    
+    <div>
+        <h3>测试参数：</h3>
+        <ul>
+            <li>贷款总额：1,000,000元</li>
+            <li>贷款年限：20年</li>
+            <li>年利率：4.5%</li>
+            <li>还款方式：等额本息</li>
+        </ul>
+    </div>
+    
+    <div>
+        <h3>标准计算公式：</h3>
+        <pre>
+月利率 = 年利率 / 12 / 100 = 4.5% / 12 / 100 = 0.00375
+还款月数 = 20年 × 12 = 240个月
+
+等额本息月供公式：
+月供 = 本金 × 月利率 × (1 + 月利率)^还款月数 ÷ [(1 + 月利率)^还款月数 - 1]
+        </pre>
+    </div>
+    
+    <div>
+        <h3>计算结果：</h3>
+        <div id="results"></div>
+    </div>
+    
+    <div>
+        <h3>与网页显示值对比：</h3>
+        <table border="1" cellpadding="10">
+            <tr>
+                <th>项目</th>
+                <th>标准计算值</th>
+                <th>网页显示值</th>
+                <th>差异</th>
+            </tr>
+            <tr>
+                <td>月供</td>
+                <td id="stdMonthly">计算中...</td>
+                <td>6,329.48元</td>
+                <td id="diffMonthly">-</td>
+            </tr>
+            <tr>
+                <td>总利息</td>
+                <td id="stdInterest">计算中...</td>
+                <td>518,675.84元</td>
+                <td id="diffInterest">-</td>
+            </tr>
+            <tr>
+                <td>还款总额</td>
+                <td id="stdTotal">计算中...</td>
+                <td>1,518,675.84元</td>
+                <td id="diffTotal">-</td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        // 精确计算函数
+        function calculateEqualPayment(principal, annualRate, years) {
+            const monthlyRate = annualRate / 100 / 12;
+            const months = years * 12;
+            
+            if (monthlyRate === 0) {
+                return {
+                    monthlyPayment: principal / months,
+                    totalInterest: 0,
+                    totalPayment: principal
+                };
+            }
+            
+            const monthlyPayment = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / 
+                                  (Math.pow(1 + monthlyRate, months) - 1);
+            const totalPayment = monthlyPayment * months;
+            const totalInterest = totalPayment - principal;
+            
+            return {
+                monthlyPayment,
+                totalInterest,
+                totalPayment
+            };
+        }
+        
+        // 格式化数字
+        function formatNumber(num) {
+            return new Intl.NumberFormat('zh-CN').format(num.toFixed(2));
+        }
+        
+        // 执行计算
+        const principal = 1000000;
+        const annualRate = 4.5;
+        const years = 20;
+        
+        const result = calculateEqualPayment(principal, annualRate, years);
+        
+        // 显示结果
+        document.getElementById('stdMonthly').textContent = formatNumber(result.monthlyPayment) + '元';
+        document.getElementById('stdInterest').textContent = formatNumber(result.totalInterest) + '元';
+        document.getElementById('stdTotal').textContent = formatNumber(result.totalPayment) + '元';
+        
+        // 计算差异
+        const webMonthly = 6329.48;
+        const webInterest = 518675.84;
+        const webTotal = 1518675.84;
+        
+        const diffMonthly = result.monthlyPayment - webMonthly;
+        const diffInterest = result.totalInterest - webInterest;
+        const diffTotal = result.totalPayment - webTotal;
+        
+        document.getElementById('diffMonthly').textContent = diffMonthly.toFixed(2) + '元';
+        document.getElementById('diffInterest').textContent = diffInterest.toFixed(2) + '元';
+        document.getElementById('diffTotal').textContent = diffTotal.toFixed(2) + '元';
+        
+        // 显示详细计算
+        const monthlyRate = annualRate / 100 / 12;
+        const months = years * 12;
+        
+        document.getElementById('results').innerHTML = `
+            <p><strong>详细计算过程：</strong></p>
+            <pre>
+月利率 = ${annualRate}% / 12 / 100 = ${monthlyRate}
+还款月数 = ${years}年 × 12 = ${months}个月
+
+计算：
+月供 = ${principal} × ${monthlyRate} × (1 + ${monthlyRate})^${months} ÷ [(1 + ${monthlyRate})^${months} - 1]
+     = ${result.monthlyPayment.toFixed(6)}元
+
+总还款额 = 月供 × 还款月数
+        = ${result.monthlyPayment.toFixed(2)} × ${months}
+        = ${result.totalPayment.toFixed(2)}元
+
+总利息 = 总还款额 - 本金
+      = ${result.totalPayment.toFixed(2)} - ${principal}
+      = ${result.totalInterest.toFixed(2)}元
+            </pre>
+        `;
+        
+        console.log('标准计算结果:', result);
+        console.log('网页显示值:', { monthly: webMonthly, interest: webInterest, total: webTotal });
+        console.log('差异:', { monthly: diffMonthly, interest: diffInterest, total: diffTotal });
+    </script>
+</body>
+</html>
