@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 微信分享优化 -->
+    <meta property="og:title" content="智能房贷计算器 - 精准计算月供利息">
+    <meta property="og:description" content="免费在线计算房贷月供、总利息，支持等额本息/等额本金两种还款方式">
+    <meta property="og:image" content="https://qq156701660.github.io/mortgage-calculator/wechat-og-image.png">
+    <meta property="og:url" content="https://is.gd/S9Fmdi">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- 微信特定 -->
+    <meta name="wechat:card" content="summary">
+    <meta name="wechat:title" content="智能房贷计算器">
+    <meta name="wechat:description" content="点击立即计算您的房贷">
+    <title>智能房贷计算器 - 微信专属版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a6dff 0%, #0d4dff 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .wechat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 微信风格头部 */
+        .wechat-header {
+            background: linear-gradient(135deg, #07c160 0%, #05a049 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .wechat-header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .wechat-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .wechat-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .wechat-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        
+        /* 主要内容 */
+        .main-content {
+            padding: 30px 20px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .feature-card h3 {
+            color: #1a6dff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feature-card h3 i {
+            font-size: 1.2rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list li i {
+            color: #07c160;
+            font-size: 1.1rem;
+            min-width: 24px;
+        }
+        
+        /* 快速访问区域 */
+        .quick-access {
+            text-align: center;
+            padding: 30px 20px;
+            background: #f0f7ff;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .qr-section {
+            margin: 25px 0;
+        }
+        
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #6c757d;
+            margin: 15px 0;
+            padding: 20px;
+            border: 2px dashed #dee2e6;
+        }
+        
+        .qr-code i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #1a6dff;
+        }
+        
+        .short-url-box {
+            background: white;
+            border: 2px solid #1a6dff;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #1a6dff;
+            word-break: break-all;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        /* 按钮样式 */
+        .wechat-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #1a6dff 0%, #0d4dff 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin: 10px;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .wechat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(26, 109, 255, 0.3);
+        }
+        
+        .wechat-btn.primary {
+            background: linear-gradient(135deg, #07c160 0%, #05a049 100%);
+        }
+        
+        .wechat-btn.primary:hover {
+            box-shadow: 0 10px 20px rgba(7, 193, 96, 0.3);
+        }
+        
+        .wechat-btn.secondary {
+            background: #6c757d;
+        }
+        
+        .wechat-btn.secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
+        }
+        
+        /* 使用指南 */
+        .guide-section {
+            background: #fff9e6;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .guide-section h3 {
+            color: #e6a700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+        
+        .steps li {
+            counter-increment: step-counter;
+            padding: 15px 0 15px 50px;
+            position: relative;
+            border-bottom: 1px solid #ffeaa7;
+        }
+        
+        .steps li:last-child {
+            border-bottom: none;
+        }
+        
+        .steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 15px;
+            width: 32px;
+            height: 32px;
+            background: #ffc107;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* 微信提示 */
+        .wechat-tips {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #2e7d32;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .wechat-tips i {
+            color: #4caf50;
+            font-size: 1.2rem;
+        }
+        
+        /* 页脚 */
+        .wechat-footer {
+            text-align: center;
+            padding: 25px 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .wechat-footer a {
+            color: #1a6dff;
+            text-decoration: none;
+        }
+        
+        .wechat-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .wechat-header {
+                padding: 20px 15px;
+            }
+            
+            .wechat-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 20px 15px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .wechat-btn {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .short-url-box {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+        }
+        
+        /* 动画 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="wechat-container">
+        <!-- 微信风格头部 -->
+        <div class="wechat-header">
+            <h1><i class="fab fa-weixin"></i> 智能房贷计算器</h1>
+            <p>微信专属版 - 安全、便捷、精准</p>
+            <div class="wechat-badge">
+                <i class="fas fa-shield-alt"></i> 隐私保护 | 无需下载
+            </div>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="main-content">
+            <!-- 功能特性 -->
+            <div class="feature-card">
+                <h3><i class="fas fa-star"></i> 核心功能</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-check-circle"></i> <strong>等额本息/等额本金</strong> - 两种还款方式自由切换</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>实时精准计算</strong> - 输入参数即时更新结果</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>移动端优化</strong> - 完美适配手机屏幕，微信内直接使用</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>隐私安全</strong> - 本地计算，不收集任何个人信息</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>免费使用</strong> - 无广告，无收费，永久免费</li>
+                </ul>
+            </div>
+            
+            <!-- 快速访问 -->
+            <div class="quick-access">
+                <h2 style="color: #1a6dff; margin-bottom: 20px;">
+                    <i class="fas fa-bolt"></i> 立即开始计算
+                </h2>
+                
+                <div class="short-url-box pulse">
+                    https://is.gd/S9Fmdi
+                </div>
+                
+                <p style="color: #6c757d; margin: 15px 0;">
+                    <i class="fas fa-link"></i> 点击上方链接复制，在微信中发送给朋友或自己
+                </p>
+                
+                <div class="button-group">
+                    <a href="https://is.gd/S9Fmdi" class="wechat-btn primary" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> 立即打开计算器
+                    </a>
+                    <button class="wechat-btn" onclick="copyShortUrl()">
+                        <i class="fas fa-copy"></i> 复制短链接
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 二维码区域 -->
+            <div class="qr-section">
+                <h3 style="text-align: center; color: #333; margin-bottom: 20px;">
+                    <i class="fas fa-qrcode"></i> 扫码使用（推荐）
+                </h3>
+                
+                <div class="qr-code">
+                    <i class="fas fa-qrcode"></i>
+                    <div style="text-align: center; font-size: 0.9rem;">
+                        <div>使用微信"扫一扫"</div>
+                        <div>或长按识别二维码</div>
+                    </div>
+                </div>
+                
+                <div class="wechat-tips">
+                    <i class="fas fa-lightbulb"></i>
+                    <div>
+                        <strong>提示：</strong> 保存此二维码图片，可随时分享给需要计算房贷的朋友
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 使用指南 -->
+            <div class="guide-section">
+                <h3><i class="fas fa-graduation-cap"></i> 微信使用指南</h3>
+                <ol class="steps">
+                    <li>
+                        <strong>复制短链接</strong>：点击上方"复制短链接"按钮
+                        <br><small>或手动复制：https://is.gd/S9Fmdi</small>
+                    </li>
+                    <li>
+                        <strong>微信发送</strong>：将链接粘贴到微信聊天窗口
+                        <br><small>可以发送给朋友、家人或微信群</small>
+                    </li>
+                    <li>
+                        <strong>点击访问</strong>：在微信中点击链接即可打开计算器
+                        <br><small>无需下载APP，无需注册登录</small>
+                    </li>
+                    <li>
+                        <strong>收藏备用</strong>：在微信中收藏链接，方便随时使用
+                        <br><small>点击微信右上角"..."选择"收藏"</small>
+                    </li>
+                    <li>
+                        <strong>分享给朋友</strong>：将计算器分享给需要的人
+                        <br><small>帮助朋友规划房贷，合理理财</small>
+                    </li>
+                </ol>
+            </div>
+            
+            <!-- 微信专属功能 -->
+            <div class="feature-card">
+                <h3><i class="fab fa-weixin"></i> 微信专属优势</h3>
+                <ul class="feature-list">
+                    <li><i class="fas fa-mobile-alt"></i> <strong>微信内直接使用</strong> - 无需跳出微信，体验流畅</li>
+                    <li><i class="fas fa-share-alt"></i> <strong>一键分享</strong> - 微信内轻松分享给好友和群聊</li>
+                    <li><i class="fas fa-bookmark"></i> <strong>微信收藏</strong> - 收藏后随时在微信中快速访问</li>
+                    <li><i class="fas fa-sync-alt"></i> <strong>实时更新</strong> - 功能持续优化，自动更新</li>
+                    <li><i class="fas fa-lock"></i> <strong>安全可靠</strong> - HTTPS加密，保护您的隐私安全</li>
+                </ul>
+            </div>
+            
+            <!-- 常见问题 -->
+            <div class="guide-section" style="background: #e3f2fd; border-left-color: #2196f3;">
+                <h3 style="color: #1976d2;"><i class="fas fa-question-circle"></i> 常见问题</h3>
+                <div style="margin-top: 15px;">
+                    <p><strong>Q: 需要下载APP吗？</strong><br>
+                    A: 不需要！直接在微信中打开链接即可使用，无需下载任何应用。</p>
+                    
+                    <p><strong>Q: 需要注册登录吗？</strong><br>
+                    A: 不需要！完全免费使用，无需注册，不收集个人信息。</p>
+                    
+                    <p><strong>Q: 计算准确吗？</strong><br>
+                    A: 采用银行标准计算公式，结果精准可靠。但实际贷款条件以银行审批为准。</p>
+                    
+                    <p><strong>Q: 链接会失效吗？</strong><br>
+                    A: 短链接永久有效，计算器功能会持续维护更新。</p>
+                </div>
+            </div>
+            
+            <!-- 最终行动号召 -->
+            <div style="text-align: center; margin: 40px 0;">
+                <h3 style="color: #333; margin-bottom: 20px;">
+                    <i class="fas fa-rocket"></i> 立即开始您的房贷规划
+                </h3>
+                
+                <div class="button-group">
+                    <a href="https://is.gd/S9Fmdi" class="wechat-btn primary pulse" target="_blank" style="font-size: 1.2rem; padding: 18px 40px;">
+                        <i class="fas fa-calculator"></i> 立即计算房贷
+                    </a>
+                </div>
+                
+                <p style="color: #6c757d; margin-top: 20px; font-size: 0.95rem;">
+                    <i class="fas fa-info-circle"></i> 已为超过1,000+用户提供精准房贷计算服务
+                </p>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="wechat-footer">
+            <p>
+                <i class="fas fa-copyright"></i> 2026 智能房贷计算器 - 微信专属版
+                <br>
+                <span style="font-size: 0.85rem;">
+                    本工具仅供参考，实际贷款条件以银行最终审批为准
+                </span>
+            </p>
+            <p style="margin-top: 15px;">
+                <a href="https://github.com/qq156701660/mortgage-calculator" target="_blank">
+                    <i class="fab fa-github"></i> 查看项目源码
+                </a>
+                | 
+                <a href="https://qq156701660.github.io/mortgage-calculator/test_calculation.html" target="_blank">
+                    <i class="fas fa-vial"></i> 计算验证测试
+                </a>
+                |
+                <a href="https://qq156701660.github.io/mortgage-calculator/short-links.html" target="_blank">
+                    <i class="fas fa-link"></i> 链接管理
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 复制短链接
+        function copyShortUrl() {
+            const url = 'https://is.gd/S9Fmdi';
+            navigator.clipboard.writeText(url).then(() => {
+                showWechatNotification('短链接已复制！粘贴到微信发送即可');
+            }).catch(err => {
+                // 备用方法
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showWechatNotification('短链接已复制！');
+            });
+        }
+        
+        // 显示微信风格通知
+        function showWechatNotification(message) {
+            // 移除现有通知
+            const existing = document.querySelector('.wechat-notification');
+            if (existing) existing.remove();
+            
+            // 创建新通知
+            const notification = document.createElement('div');
+            notification.className = 'wechat-notification';
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #07c160;
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 10px 25px rgba(7, 193, 96, 0.3);
+                    z-index: 1000;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    animation: slideIn 0.3s ease;
+                    max-width: 300px;
+                ">
+                    <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    notification.remove();
+                    style.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // 添加微信分享优化
+        function setupWechatShare() {
+            // 微信内浏览器检测
+            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+            if (isWechat) {
+                console.log('微信浏览器内访问，优化体验');
+                // 可以添加微信特定优化
+            }
+            
+            // 页面访问统计
+            console.log('微信分享页面访问时间:', new Date().toLocaleString('zh-CN'));
+        }
+        
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', () => {
+            setupWechatShare();
+            
+            // 添加微信提示
+            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+            if (isWechat) {
+                setTimeout(() => {
+                    showWechatNotification('检测到微信浏览器，体验已优化！');
+                }, 1000);
+            }
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'c') {
+                    copyShortUrl();
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // 微信分享数据
+        const wechatShareData = {
+            title: '智能房贷计算器 - 精准计算月供利息',
+            desc: '免费在线计算房贷月供、总利息，支持等额本息/等额本金两种还款方式',
+            link: 'https://is.gd/S9Fmdi',
+            imgUrl: 'https://qq156701660.github.io/mortgage-calculator/wechat-og-image.png'
+        };
+        
+        console.log('微信分享页面已加载，优化配置:', wechatShareData);
+    </script>
+</body>
+</html>
